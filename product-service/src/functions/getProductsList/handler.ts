@@ -2,10 +2,15 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import schema from './schema';
-import { products } from '@libs/localDB';
+import { getProductsBD } from '@libs/localDB';
 
 const getProductsList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async () => {
-  return formatJSONResponse([ ...products ]);
+  try {
+    const products = await getProductsBD();
+    return formatJSONResponse(products);
+  } catch (e) {
+    throw new Error();
+  }
 };
 
 export const main = middyfy(getProductsList);

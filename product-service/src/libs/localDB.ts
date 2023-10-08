@@ -1,6 +1,6 @@
 import { Product } from '../interfaces/product.interface';
 
-export const products: Product[] = [
+const products: Product[] = [
     {
         "count": 4,
         "description": "Short Product Description1",
@@ -58,3 +58,5 @@ export const products: Product[] = [
         "title": "ProductName"
     }
 ]
+
+export const getProductsBD = async (): Promise<Product[] | undefined> => products;
