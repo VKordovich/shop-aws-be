@@ -1,12 +1,12 @@
 import { handlerPath } from '@libs/handler-resolver';
 
-export const getProductsById = {
+export const createProduct = {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
       http: {
-        method: 'get',
-        path: 'products/{productId}',
+        method: 'post',
+        path: 'products',
         cors: true
       },
     },
