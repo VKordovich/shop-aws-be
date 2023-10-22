@@ -19,7 +19,6 @@ const serverlessConfiguration: AWS = {
       PRODUCTS_TABLE_NAME: "Products",
       STOCK_TABLE_NAME: "Stock"
     },
-
     region: 'eu-central-1',
     iam: {
       role: {
