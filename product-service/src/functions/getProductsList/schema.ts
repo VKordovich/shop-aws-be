@@ -3,7 +3,6 @@ export default {
   items: {
     type: "object",
     properties:  {
-      count: { type: 'number' },
       description: { type: 'string' },
       id: { type: 'string' },
       price: { type: 'number' },

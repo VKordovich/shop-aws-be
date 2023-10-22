@@ -33,4 +33,8 @@ export const getProductsList = {
       // }
     }
   ],
+  environment: {
+    PRODUCTS_TABLE_NAME: process.env.PRODUCTS_TABLE_NAME,
+    STOCK_TABLE_NAME: process.env.STOCK_TABLE_NAME
+  }
 };

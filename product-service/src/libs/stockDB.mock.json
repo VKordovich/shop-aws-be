@@ -1,0 +1,28 @@
+{
+    "Stock": [
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "7567ec4b-b10c-48c5-9345-fc73c48a80aa"
+                    },
+                    "count": {
+                        "N": "1"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "product_id": {
+                        "S": "7567ec4b-b10c-48c5-9345-fc73c48a80ab"
+                    },
+                    "count": {
+                        "N": "2"
+                    }
+                }
+            }
+        }
+    ]
+}

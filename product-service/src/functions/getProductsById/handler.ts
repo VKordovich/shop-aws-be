@@ -2,19 +2,19 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import schema from './schema';
-import { getProductsBD } from '@libs/localDB';
-import { Product } from '../../interfaces/product.interface';
+import DatabaseService from '../../services/dynamoDb.service';
+import { databaseTables } from '../../utils/utils';
+import { ResponseModel } from '../../models/res.model';
+import { StatusCode } from '../../enums/statusCode.enum';
 
 const getProductsById: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  try {
-    const { productId } = event.pathParameters;
-    const products = await getProductsBD();
-    const product: Product | null = products.find(product => product.id === productId) ?? null;
-    if(!product) throw new Error();
-    return formatJSONResponse({ product });
-  } catch (e) {
-    throw new Error();
-  }
+  const databaseService = new DatabaseService();
+  const { productsTable } = databaseTables();
+  const { Items: [data] } = await databaseService.queryItem({
+    tableName: productsTable,
+    id: event.pathParameters.productId
+  });
+  return formatJSONResponse(new ResponseModel(data, StatusCode.OK))
 };
 
 export const main = middyfy(getProductsById);
