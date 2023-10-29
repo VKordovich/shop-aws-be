@@ -6,17 +6,14 @@ export default class ProductModel {
     private description: string;
     private price: number;
     private title: string;
+    private count: number;
 
-    constructor({
-                    id = UUID(),
-                    description,
-                    price,
-                    title
-    }: Product) {
-        this.id = id;
+    constructor({ description, price, title, count }: Product) {
+        this.id = UUID();
         this.description = description;
         this.price = price;
         this.title = title;
+        this.count = count ?? null;
     }
 
     toEntityMappings(): Product {
@@ -24,7 +21,8 @@ export default class ProductModel {
             id: this.id,
             description: this.description,
             price: this.price,
-            title: this.title
+            title: this.title,
+            count: this.count
         };
     }
 }

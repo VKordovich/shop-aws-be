@@ -10,9 +10,5 @@ export const getProductsById = {
         cors: true
       },
     },
-  ],
-  environment: {
-    PRODUCTS_TABLE_NAME: process.env.PRODUCTS_TABLE_NAME,
-    STOCK_TABLE_NAME: process.env.STOCK_TABLE_NAME
-  }
+  ]
 };

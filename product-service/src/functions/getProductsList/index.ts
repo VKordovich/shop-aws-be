@@ -32,9 +32,5 @@ export const getProductsList = {
       //   pathPattern: '/products*'
       // }
     }
-  ],
-  environment: {
-    PRODUCTS_TABLE_NAME: process.env.PRODUCTS_TABLE_NAME,
-    STOCK_TABLE_NAME: process.env.STOCK_TABLE_NAME
-  }
+  ]
 };
