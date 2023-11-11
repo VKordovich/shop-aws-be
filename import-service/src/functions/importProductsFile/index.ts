@@ -7,7 +7,14 @@ export const importProductsFile = {
       http: {
         method: 'get',
         path: 'import',
-        cors: true
+        cors: true,
+        authorizer: {
+          arn: 'arn:aws:lambda:eu-central-1:903061051266:function:authorization-service-dev-basicAuthorizer',
+          name: 'basicTokenAuthorizer',
+          identitySource: 'method.request.header.Authorization',
+          resultTtlInSeconds: 0,
+          type: 'token'
+        }
       },
     },
   ],

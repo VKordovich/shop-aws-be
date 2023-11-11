@@ -5,6 +5,8 @@ import { S3 } from 'aws-sdk';
 const BUCKET = 'rs-import-storage-s3';
 
 const importProductsFile: ValidatedEventAPIGatewayProxyEvent<any> = async (event) => {
+  console.log('Event>', JSON.stringify(event));
+
   const s3 = new S3({ region: 'eu-central-1' });
   const { name } = event.queryStringParameters;
   const path = `uploaded/${name}`;
