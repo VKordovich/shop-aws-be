@@ -10,9 +10,9 @@ import { Product } from '../../interfaces/product.interface';
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<unknown> = async (event) => {
   const databaseService = new DatabaseService();
-  const { productsTable } = databaseTables();
-  const product = new ProductModel(event.body as Product).toEntityMappings();
-  const params: PutItem = {
+  const { productsTable, stockTable } = databaseTables();
+  const product = new ProductModel(JSON.parse(event.body as string) as Product).toEntityMappings();
+  const productsParams: PutItem = {
     TableName: productsTable,
     Item: {
       id: product.id,
@@ -21,7 +21,15 @@ const createProduct: ValidatedEventAPIGatewayProxyEvent<unknown> = async (event)
       title: product.title
     },
   };
-  await databaseService.create(params);
+  const stockParams: PutItem = {
+    TableName: stockTable,
+    Item: {
+      product_id: product.id,
+      count: product.count
+    },
+  };
+  await databaseService.create(productsParams);
+  await databaseService.create(stockParams);
   return formatJSONResponse(new ResponseModel({}, StatusCode.OK))
 };
 

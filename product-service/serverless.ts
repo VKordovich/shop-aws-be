@@ -3,6 +3,7 @@ import { getProductsList } from '@functions/getProductsList';
 import { getProductsById } from '@functions/getProductsById';
 import dynamoDbTables from './src/resources/dynamoDb.tables';
 import { createProduct } from '@functions/createProduct';
+import { catalogBatchProcess } from '@functions/catalogBatchProcess';
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
@@ -17,7 +18,8 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       PRODUCTS_TABLE_NAME: "Products",
-      STOCK_TABLE_NAME: "Stock"
+      STOCK_TABLE_NAME: "Stock",
+      SNS_ARN: { Ref: 'SNSTopic' }
     },
     region: 'eu-central-1',
     iam: {
@@ -34,8 +36,24 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem'
             ],
-            Resource: "arn:aws:dynamodb:*:*:table/*"
-          }
+            Resource: [
+              { "Fn::GetAtt": ["ProductsTable", "Arn"] },
+              { "Fn::GetAtt": ["StockTable", "Arn"] },
+            ]
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              "lambda:InvokeAsync",
+              "lambda:InvokeFunction"
+            ],
+            Resource: ["*"]
+          },
+          {
+            Effect: 'Allow',
+            Action: ['sns:*'],
+            Resource: { Ref: 'SNSTopic' }
+          },
         ]
       }
     }
@@ -43,11 +61,26 @@ const serverlessConfiguration: AWS = {
   functions: {
     getProductsList,
     getProductsById,
-    createProduct
+    createProduct,
+    catalogBatchProcess
   },
   package: { individually: true },
   resources: {
-    Resources: { ...dynamoDbTables }
+    Resources: {
+      ...dynamoDbTables,
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: { TopicName: 'createProductTopic' }
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'vadim_kordovich@epam.com',
+          Protocol: 'email',
+          TopicArn: { Ref: 'SNSTopic' }
+        }
+      }
+    }
   }
 };
 

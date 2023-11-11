@@ -1,5 +1,8 @@
 import { middyfy } from '@libs/lambda';
-import { S3 } from 'aws-sdk';
+import {
+    S3,
+    SQS
+} from 'aws-sdk';
 import { GetObjectRequest } from 'aws-sdk/clients/s3';
 import csv from 'csv-parser';
 
@@ -7,6 +10,7 @@ const BUCKET = 'rs-import-storage-s3';
 
 const importFileParser: any = async (event) => {
   const s3 = new S3({ region: 'eu-central-1' });
+  const sqs = new SQS({ region: 'eu-central-1' });
   let productList = [];
   let status = 202;
   try {
@@ -33,6 +37,13 @@ const importFileParser: any = async (event) => {
               Bucket: BUCKET,
               Key: record.s3.object.key
           }).promise();
+
+          productList.forEach((product) => {
+              sqs.sendMessage({
+                  QueueUrl: process.env.SQS_URL,
+                  MessageBody: JSON.stringify(product)
+              }, () => console.log('send msg'))
+          })
       }
   } catch (e) {
       status = 500;
