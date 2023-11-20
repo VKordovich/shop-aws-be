@@ -1,0 +1,28 @@
+service: bff-service
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-central-1
+
+  iam:
+    role:
+      name: bff-role-nest
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: '*'
+
+  environment:
+    PRODUCT: https://7zd2qj9x2i.execute-api.eu-central-1.amazonaws.com/dev/products
+
+functions:
+  main:
+    handler: dist/main.handler
+    events:
+      - http:
+          method: ANY
+          path: '{proxy+}'
